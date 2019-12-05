@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display|Roboto:300|Roboto:700');
+@import "variables";
+@import '~bootstrap/scss/bootstrap';
+
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+.playfair{
+  font-family: "Playfair Display", serif !important;
+}
+h3{
+  font-family: "Playfair Display", serif !important;
+}

@@ -1,0 +1,54 @@
+$width:2px;
+$thickness: 10px;
+#cursor{
+  //Non Click
+  position: fixed;
+  top: -10vh;
+  left: -10vw;
+  height:120vh;
+  width:120vw;
+  pointer-events: none;
+  z-index: 99999;
+  *{
+    position:fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999;
+    border: $width solid rgb(255, 255, 255);
+    border-radius: 100%;
+    transition-timing-function: linear;
+  }
+  #first{
+    width: $thickness;
+    background: rgb(255, 255, 255);
+    height:$thickness;
+    transition: all 60ms;
+  }
+  #second{
+    width: 3*$thickness;
+    height: 3*$thickness;
+    transition: all 70ms;
+  }
+  #third{
+    border:none;
+    width: 5*$thickness;
+    height: 5*$thickness;
+    background: rgba(255, 255, 255, 0.48);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 70ms, opacity 500ms;
+  }
+  //Click
+  &.active{
+    #first{
+      border: $thickness*0.5 solid rgb(255,255,255);
+    }
+    #second{
+      border: rgba(255,255,255,0.5);
+    }
+    #third{
+      visibility: visible;
+      opacity:1;
+    }
+  }
+}

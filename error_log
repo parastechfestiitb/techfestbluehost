@@ -1,0 +1,2 @@
+[15-Mar-2019 13:27:20 UTC] PHP Parse error:  syntax error, unexpected '"imagemagick"' (T_CONSTANT_ENCAPSED_STRING), expecting ',' or ')' in php shell code on line 1
+[15-Mar-2019 13:27:28 UTC] PHP Parse error:  syntax error, unexpected 'echo' (T_ECHO), expecting ',' or ';' in php shell code on line 2

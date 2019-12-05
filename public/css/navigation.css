@@ -1,0 +1,61 @@
+/*mobile start*/
+
+
+
+/*mobile portrain ends*/
+
+
+
+/*mobile landscape start */
+
+@media (max-width:62em) and (orientation: landscape) {
+body{
+	background-color: blue;
+}
+
+}
+
+/*mobile landscape ends */
+
+
+
+
+
+/*lapi style starts*/
+
+@media (min-width:62em) {
+		
+
+
+.navigation{
+	position: relative;
+	/*width: 100;*/
+
+}
+.navigation li{
+	float: left;
+	padding-left: 4px;
+	padding-right: 4px;
+	font-size: 1.5vw;
+}
+
+
+.navigation li a{
+	padding: 2px;
+	color: white;
+	/*font-size: 1.5vw;*/
+}
+
+
+
+.navigation_in{
+	position: absolute;
+    top: 62px;
+    width: 100vw;
+    height: 2.4vw;
+}
+
+}
+
+/*lapi style ends*/
+

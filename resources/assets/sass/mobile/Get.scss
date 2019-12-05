@@ -1,0 +1,45 @@
+/*
+* Bootstrap ka size chota kana hai
+*/
+@import url('https://fonts.googleapis.com/css?family=Playfair+Display|Roboto:300|Roboto:700');
+@import url('https://fonts.googleapis.com/css?family=Play');
+@import "../variables";
+@import '~bootstrap/scss/bootstrap';
+*{
+  transition: blur 300ms;
+}
+html,body,#app{
+  overflow-x:hidden;
+  font-family: 'Roboto', sans-serif;
+  background: #000000;
+  height: 100vh;
+  width: 100vw;
+  font-size:18px;
+}
+.navbar-laravel {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+.playfair{
+  font-family: "Playfair Display", serif !important;
+}
+.play{
+  font-family: 'Play',sans-serif !important;
+}
+h3{
+  font-family: "Playfair Display", serif !important;
+}
+button{
+  border: 2px solid white;
+  font-family: 'Play',sans-serif;
+  background: transparent;
+  color: white;
+  padding: 10px 30px;
+}
+.blur{
+  filter: blur(15px);
+}
+
+.quote{
+  font-size:1.2em !important;
+}

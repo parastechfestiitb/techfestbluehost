@@ -1,0 +1,422 @@
+<template>
+    <div class="controller" :style="{height:controllerHeight + 'px'}" @keyup.left="moveBlock(-1)" @keyup.right="moveBlock(1)">
+        <div class="logo-container">
+            <div class="tf"></div>
+            <div class="techfest-logo"></div>
+        </div>
+        <main class="d-flex flex-row">
+            <div class="hider d-flex align-items-center" @click="clickBlock(frame-1,elems()[frame-1])">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="block" v-for="(val,key) in elems()" :style="{ transform : 'translateX(' + position(key) +'vw)', width: wid(key) + 'vw'}" :id="'block-'+key" @click="key!==elementLength?clickBlock(key,val):null" :class="key===elementLength?'fixed-block':''">
+                <div v-if="key===elementLength" class="relative">
+                    <div class="endblock" :style="{opacity:opacityPrizeMoney1(key-1)}">
+                        <div>
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis in inventore ipsum iusto odit soluta. Fugit molestiae nisi non. Amet eveniet fugiat nostrum ratione? Doloribus et labore maiores nemo non?
+                        </div>
+                        <div class="go-to-first play-font" @click="goToFirst">
+                            <i class="fas fa-chevron-left"></i> Back to First
+                        </div>
+                    </div>
+                </div>
+                <div v-else class="relative">
+                    <div class="current-number" v-if="key!==0" :style="{top:topCurrentNumber(key)+'vh',left:leftCurrentNumber(key)+'vw',opacity:opacityCurrentNumber(key)}">{{(key < 10) ? '0' + key.toString() : key}}</div>
+                    <div class="total-count" :style="{top:topTotalCount(key)+'vh',opacity:opacityTotalCount(key),left: (leftName(key)+2.5)+'vw'}">/{{c-1}}</div>
+                    <div class="short-description" :style="{opacity: opacityPrizeMoney1(key), left: leftName(key) + 'vw'}">{{val.description.short_description}}</div>
+                    <div class="prize-money-1" :style="{opacity: opacityPrizeMoney1(key),left: leftName(key)+'vw'}">Prize Money Worth INR&nbsp;{{ numberWithCommas(val.amount) }}/-</div>
+                    <div class="name play-font" :style="{fontSize: fontName(key) + 'vw',left: leftName(key) + 'vw'}">{{val.name}}</div>
+                    <div class="img-block" :style="{backgroundColor: 'orange',backgroundImage: 'url(https://picsum.photos/1900/500/?random&i='+key+')', height: imgBlockHeight(key) +'vh' } " alt="Competition"></div>
+                    <div class="prize-money-2" :style="{opacity: opacityPrizeMoney2(key),top: heightPrizeMoney2(key) + 'vh'}">
+                        Prize Money Worth
+                        <br>INR&nbsp;{{ numberWithCommas(val.amount) }}/-
+                    </div>
+                </div>
+            </div>
+            <div class="details">
+                Hello World
+            </div>
+            <div class="navigation-circles">
+                <div class="circle d-inline-block pointer" v-for="(val,key) in elements" :class="key===frame?'text-upper':''" @click="clickBlock(key,val)">o</div>
+            </div>
+        </main>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "Competitions",
+        data: function(){
+            return {
+                elements: null,
+                elementLength: 0,
+                frame: this.$root.competition,
+                c: 0,
+                w: 0,
+                prev: 0,
+                fp: 0,
+                scale :0,
+                controllerHeight: 100,
+                op: 0,
+                fl: 0,
+                smoothScroller: null,
+            }
+        },
+        methods: {
+            elems: function(){
+                return this.elements;
+            },
+            handleScroll: function(e){
+                this.op = 100 * (e.target.scrollingElement.scrollTop / this.w) - 0.000001;
+                clearTimeout(this.smoothScroller);
+                this.smoothScroller = setTimeout(()=> this.smoothScroll(),300);
+            },
+            handleResize: function(){
+                this.controllerHeight = (this.c - 0.8)*this.scale;
+                this.w = this.c * this.scale - $(window).height();
+                window.addEventListener('scroll',this.handleScroll);
+            },
+            numberWithCommas: (x) => {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            },
+            position: function(e){
+                let frame = this.frame;
+                let fp = this.fp;
+                if(e===frame)
+                    return (50 - 47.3958333333 * fp);
+                else if(e=== frame+1)
+                    return (65.7986111111 - 15.7986111111 * fp);
+                else if(e===frame+2)
+                    return (81.5972222222 - 15.7986111111* fp);
+                else if(e===frame+3)
+                    return (97.3958333333 - 15.7986111111 * fp);
+                else if(e===frame+4)
+                    return (113.194444444 - 15.7986111111 * fp);
+                else if(e===frame-1)
+                    return ( 2.6041666667 - 47.3958333333 * fp);
+                else if(e===frame-2)
+                    return ( -44.7916666666 - 47.3958333333 * fp);
+                else if(e<frame-3)
+                    return (-89.5833333332);
+                else return (113.194444444);
+            },
+            wid: function(e){
+                let frame = this.frame;
+                if(e===frame) return (15.7986111111 + 31.5972222222 * this.fp);
+                else if(e<frame) return 47.3958333333;
+                else return 15.7986111111;
+            },
+            topCurrentNumber: function(e){
+                let frame = this.frame;
+                if(e===frame){
+                    if(this.fp<0.5) return 30;
+                    else return 13;
+                }
+                else if(e>=frame) return 30;
+                else return 13;
+            },
+            leftCurrentNumber: function(e){
+                let frame = this.frame;
+                if(e===frame && this.fp>0.5) return 1.506024096 +  22 * (this.fp-0.5);
+                else if(e>=frame) return 1.506024096;
+                else return 12.506024096;
+            },
+            opacityCurrentNumber: function(e){
+                let frame = this.frame;
+                let fp = this.fp;
+                if(e===frame && fp<0.4) return 1 - fp*2.5;
+                else if(e===frame && fp>0.6) return (fp - 0.6)*2.5;
+                else if(frame===e) return 0;
+                else return 1;
+
+            },
+            topTotalCount: function(e){
+                let frame = this.frame;
+                if(e===frame) return 32+18*this.fp;
+                else if(e<frame) return 50;
+                else return 32;
+            },
+            opacityTotalCount:function(e){
+                let frame = this.frame;
+                if(e===frame) return 1-10*this.fp;
+                else if(e<frame) return 0;
+                else if(e>frame) return 1;
+            },
+            imgBlockHeight: function(e){
+                let frame = this.frame;
+                if(e===frame) return (21 + 24.45454*this.fp);
+                else if(e<frame) return 45.45454;
+                else return 21;
+            },
+            smoothScroll: function(){
+                let k = (this.c * this.scale - $(window).height())/this.c;
+                if(this.fp<0.5){
+                    $("html,body").stop().animate({
+                        scrollTop: (this.frame-1)*k
+                    },100,'linear');
+                }
+                else{
+                    $("html,body").stop().animate({
+                        scrollTop: this.frame*k
+                    },100,'linear');
+                }
+            },
+            opacityPrizeMoney2: function(e){
+                let frame = this.frame;
+                if(e===frame) return 1-this.fp*3 ;
+                else if(e < frame) return 0;
+                else return 1;
+            },
+            opacityPrizeMoney1: function(e){
+                let frame = this.frame;
+                if(e===frame) return this.fp;
+                else if(e<frame) return 1;
+                else return 0;
+            },
+            heightPrizeMoney2: function(e){
+                let frame = this.frame;
+                if(e===frame) return 75.72727272 + 30 * this.fp;
+                else if(e < frame) return 85.72727272;
+                else return 75.72727272;
+            },
+            fontName: function(e){
+                let frame = this.frame;
+                if(e===frame) return (1.45833333333+0.625*this.fp);
+                else if(e<frame) return 2.08333333333;
+                else return 1.45833333333;
+            },
+            leftName: function(e){
+                let frame = this.frame;
+                if(e===frame) return 1.506024096 + 15*this.fp;
+                if(e<frame) return 16.506024096;
+                else return 1.506024096;
+            },
+            clickBlock: function(e,v){
+                if(e===this.frame) {
+                    if(e===0) return;
+                    this.$root.competition = e;
+                    this.$router.push({name:'competitionNameId',params:{name :v.name,id: v.id}})
+                }
+                else {
+                    $("html,body").stop().animate({
+                        scrollTop: e*(this.c * this.scale - $(window).height())/this.c
+                    },300,'linear')
+                }
+            },
+            updateMainImage: function(){
+                var time = new Date();
+                var hours = time.getHours() + time.getMinutes()/60;
+                if(hours>12) hours = 24 - hours;
+                if(hours<0) hours+=12;
+                $('main,.hider,.block').css('backgroundPosition','center -'+hours*2000/3+ 'vmax');
+            },
+            handleKeyPress: function(e){
+                if(e.keyCode === 39)
+                    this.clickBlock(this.frame+1);
+                else if(e.keyCode===37)
+                    this.clickBlock(this.frame - 1);
+                else if(e.keyCode===13)
+                    $('#block-'+this.frame).click();
+                else if(e.keyCode===8)
+                    this.$router.go(-1);
+            },
+            goToFirst: function(){
+                $("html,body").stop().animate({
+                    scrollTop: 0
+                }, 300, 'linear');
+            }
+        },
+        watch: {
+            op : function(){
+                this.frame = Math.ceil(this.op/this.fl);
+                this.fp = this.frame===0?1:(this.op % this.fl) / this.fl;
+            }
+        },
+        created: function () {
+            this.$root.showNav = true;
+            this.updateMainImage();
+            setInterval(this.updateMainImage, 1000);
+            axios.get(_routes.eventGetPost)
+                .then((response) => {
+                    let elements = response.data;
+                    elements.forEach((e, i, a) => {
+                        a[i]['description'] = JSON.parse(a[i]['description']);
+                    });
+                    let c = Object.keys(elements).length - 1, scale = c * 50, controllerHeight = (c-0.8) * scale,
+                        w = c * scale - $(window).height(), fl = 100 / c;
+                    this.elements = elements;
+                    this.c = c;
+                    this.scale = scale;
+                    this.controllerHeight = controllerHeight;
+                    this.w = w;
+                    this.fl = fl;
+                    this.elementLength = Object.keys(elements).length - 1;
+                    window.addEventListener('scroll', this.handleScroll);
+                    window.addEventListener('resize', this.handleResize);
+                    $("html,body").stop().animate({
+                        scrollTop: this.frame * (this.c * this.scale - $(window).height()) / this.c + 1
+                    }, 300, 'linear');
+                    window.addEventListener('keydown',this.handleKeyPress);
+                });
+        },
+        destroyed (){
+            window.removeEventListener('scroll',this.handleScroll);
+            window.removeEventListener('resize',this.handleResize);
+        }
+    }
+</script>
+
+<style scoped>
+    *{
+        transition-timing-function: linear !important;
+        transition: none;
+    }
+    .logo-container{
+        position:fixed;
+        top:2.84090909vh;
+        left: 1.76767677vw;
+        width: 18.1932865vw;
+        height: 3.4375vw;
+        z-index: 2;
+    }
+    .logo-container .tf{
+        height: 3.4375vw;
+        width:3.871875vw;
+        background: url('https://s3.ap-south-1.amazonaws.com/techfest/public/logo-main.png') no-repeat center center;
+        background-size:contain;
+        position: absolute;
+        top:0;
+        left: 0;
+    }
+    .logo-container .techfest-logo{
+        position: absolute;
+        right:0;
+        top:0;
+        height:3.4375vw;
+        width: 13.9583333vw;
+        background: url('https://s3.ap-south-1.amazonaws.com/techfest/public/logo-rest.png') no-repeat center center;
+        background-size: contain;
+    }
+    main {
+        height: 100vh;
+        width: 100%;
+        position: fixed;
+        font-size: 0;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    main,.hider,.block{
+        -webkit-background-size: auto 100%;
+        background-size: 2000vmax 8000vmax !important;
+        background: url('http://techfest.org/asset/img/bgColor.svg') no-repeat fixed center 0;
+        color: #fff;
+    }
+    .hider{
+        /*background: linear-gradient(to right, rgba(255,255,255,1) 0% , rgba(255,255,255,1) 85%, rgba(255,255,255,0) 100% );*/
+        height:100vh;
+        position: absolute;
+        bottom:0;
+        left:0;
+        width: 2.8vw;
+        z-index: 2;
+        font-size:2vw;
+        padding-left:0.4vw;
+    }
+    main .block {
+        font-size: 15px;
+        height: 100%;
+        width: 15vw;
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        position: absolute;
+        transform: translateX(100vw);
+    }
+    .fixed-block{
+        width: 50vw !important;
+    }
+    .short-description{
+        height: 20vh;
+        width: 25vw;
+        position: absolute;
+        top: 15.5vh;
+        font-size: 0.8333333333vw;
+    }
+    .relative {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow:hidden;
+        white-space: normal;
+        font-size: 1.04166666667vw;
+    }
+    .prize-money-1{
+        position: absolute;
+        opacity: 0;
+        bottom: calc(53.125vh + 3.64583333333vw);
+        left: 1.506024096vw;
+        font-size: 1.04166666667vw;
+    }
+    .current-number{
+        position:absolute;
+        left:1.5064024096vw;
+        font-size: 1.04166666667vw;
+        font-weight: bold;
+        font-size:2.083333333333vw;
+    }
+    .total-count{
+        position: absolute;
+        left: 3.5064024096vw;
+    }
+    .name{
+        position:absolute;
+        bottom:51.5625vh;
+        left:1.506024096vw;
+    }
+    .img-block {
+        max-height: 45.454545vh;
+        background-position: top right;
+        background-size: auto 100%;
+        height:100%;
+        position: absolute;
+        top: 50vh;
+        left: 0;
+        right: 0;
+        margin: 0.39vw;
+    }
+    .prize-money-2{
+        position:absolute;
+        opacity:1;
+        top:74.2898vh;
+        left:1.506024096vw;
+        width:calc(100% - 3.012048192vw);
+    }
+    .endblock{
+        position:absolute;
+        width: 30vw;
+        left:10vw;
+        top:40vh;
+    }
+    .navigation-circles{
+        position:fixed;
+        bottom:5vh;
+        right:5vw;
+        font-size:0.83333333333vw;
+        border: 1px solid white;
+        padding:2px;
+
+    }
+    .navigation-circles>*{
+        width: 1.66666666666vw;
+        text-align: center;
+    }
+    .navigation-circles>*:first-child{
+        color:red;
+    }
+    .navigation-circles>*:last-child{
+        color:red;
+        margin-right:0.833333333333vw;
+    }
+    .text-upper{
+        text-transform: uppercase;
+    }
+</style>

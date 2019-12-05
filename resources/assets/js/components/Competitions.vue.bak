@@ -1,0 +1,213 @@
+<template>
+
+    <div class="controller">
+        <main>
+            <div class="block active" id="block-0">
+                <div class="relative"><img src="https://placekitten.com/1952" alt=""/></div>
+            </div>
+            <div class="block" id="block-1">
+                <div class="relative"><img src="https://placekitten.com/100" alt=""/></div>
+            </div>
+            <div class="block" id="block-2">
+                <div class="relative"><img src="https://placekitten.com/200" alt=""/></div>
+            </div>
+            <div class="block" id="block-3">
+                <div class="relative"><img src="https://placekitten.com/300" alt=""/></div>
+            </div>
+            <div class="block" id="block-4">
+                <div class="relative"><img src="https://placekitten.com/400" alt=""/></div>
+            </div>
+            <div class="block" id="block-5">
+                <div class="relative"><img src="https://placekitten.com/500" alt=""/></div>
+            </div>
+            <div class="block" id="block-6">
+                <div class="relative"><img src="https://placekitten.com/600" alt=""/></div>
+            </div>
+            <div class="block" id="block-7">
+                <div class="relative"><img src="https://placekitten.com/700" alt=""/></div>
+            </div>
+            <div class="block" id="block-8">
+                <div class="relative"><img src="https://placekitten.com/800" alt=""/></div>
+            </div>
+            <div class="block" id="block-9">
+                <div class="relative"><img src="https://placekitten.com/900" alt=""/></div>
+            </div>
+            <div class="block" id="block-10">
+                <div class="relative"><img src="https://placekitten.com/1000" alt=""/></div>
+            </div>
+            <div class="block" id="block-11">
+                <div class="relative"><img src="https://placekitten.com/1100" alt=""/></div>
+            </div>
+            <div class="block" id="block-12">
+                <div class="relative"><img src="https://placekitten.com/1200" alt=""/></div>
+            </div>
+            <div class="block" id="block-13">
+            </div>
+            <div class="block" id="block-14">
+            </div>
+        </main>
+    </div>
+</template>
+
+<script>
+    var $c,$w,$prev,$fl,$scale;
+    var dom,dom1,dom2,dom0;
+    let frameAnim = (f,fp) => {
+        //position
+        if(f!==$prev) {
+            $('#block-'+f).addClass('active');
+        }
+        $('#block-'+f).css({
+            transform : 'translateX('+(50 - 0.5 * fp)+'vw)',
+            width : (25 + 0.25 * fp) + 'vw',
+            zIndex: 3
+        });
+        return false;
+    };
+    let frame1Anim = (f,fp) => {
+        $('#block-'+f).css({
+            transform : 'translateX('+ (75 - fp / 4) + 'vw)',
+        }).removeClass('active');
+        return false;
+    };
+
+    let frame2Anim = (f,fp) => {
+        $('#block-'+f).css({
+            transform : 'translateX('+(100 - fp / 4) + 'vw)',
+        });
+        return false;
+    };
+    let frame0Anim = (f,fp) => {
+        $('#block-'+f).css({
+            transform : 'translateX('+(-0.5 * fp) + 'vw)',
+        });
+        return false;
+    };
+    let clearBuffer = (f) => {
+        for(let x = f+2;x<=$c;x+=1){
+            $('#block-'+x).css({
+                tranform: 'translateX(100vw)',
+            });
+            console.log($('#block-'+x).css('transform'));
+        }
+        for(let x = f - 1;x>=0;x-=1){
+            $('#block-'+x).css({
+                tranform: 'translateX(-50vw)'
+            });
+        }
+    };
+    let timer,buffer=false;
+    let scrollFunction = function(){
+        var $op = 100 * $(document).scrollTop() / $w; // overall progress
+        var $frame = Math.ceil($op / $fl);  // frame
+        var $fp = $frame===0?100:100 * ($op % $fl) / $fl;  // frame progress
+        frame0Anim($frame-1, $fp);
+        frameAnim($frame, $fp);
+        frame1Anim($frame+1, $fp);
+        frame2Anim($frame+2, $fp);
+        clearTimeout(timer);
+        timer = setTimeout(function(){
+            if(buffer) return;
+            buffer = true;
+            clearBuffer($frame);
+            setTimeout(function(){
+                buffer = false;
+            },1200);
+            if($fp<50){
+                $('html,body').animate({
+                    scrollTop : $w / $c * ($frame - 1)
+                },500,'linear');
+            }
+            else{
+                $('html,body').animate({
+                    scrollTop : $w / $c * $frame
+                },500,'linear')
+            }
+        },500);
+
+        return false;
+    };
+    $(document).scroll(scrollFunction);
+    export default {
+        name: "Competitions",
+        data: function(){
+            return {
+                frame: 0,
+                c: 0,
+                w: 0,
+                prev: 0,
+                fp: 0,
+                scale :0,
+            }
+        },
+        created: function(){
+            $(document).ready(function(){
+                $c = $('.block').length - 1; // number of elements in main
+                $scale = 50*$c;
+                console.log($scale);
+                $('.controller').height($c * $scale); // initialize scroll
+                $w = $c * $scale - $(window).height();  //total height of scroll
+                $fl = 100 / $c;                 // frame length
+                $prev = 0;
+            });
+        },
+        watch: {
+
+        }
+    }
+</script>
+
+<style scoped>
+    *{
+        transition-timing-function: linear !important;
+        transition: none;
+    }
+    main {
+        height: 100vh;
+        width: 100%;
+        position: fixed;
+        font-size: 0;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    main .block {
+        font-size: 15px;
+        height: 100%;
+        width: 25vw;
+        margin: 0;
+        padding: 0;
+        display: inline-block;
+        position: absolute;
+        transform: translateX(100vw);
+        background: white;
+        padding: 10px;
+    }
+    main .block:first-child {
+        transform: translateX(0vw);
+        width: 50vw;
+    }
+    main .block:nth-child(2) {
+        transform: translateX(50vw);
+    }
+    main .block:nth-child(3) {
+        transform: translateX(75vw);
+    }
+    main .block .relative {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        padding: 10px;
+    }
+    main .block .relative img {
+        max-width: 100%;
+        max-height:50vh;
+        width:100%;
+        height:100%;
+        position: absolute;
+        top: 40vh;
+        margin: auto;
+        left: 0;
+        right: 0;
+    }
+
+</style>

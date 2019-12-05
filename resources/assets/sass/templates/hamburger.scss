@@ -1,0 +1,145 @@
+@import "navigation";
+$width : 40px;
+$distance : 10px;
+$timing: 1s;
+$bar-width: 20px;
+$sidenav-width: 500px;
+$padding:2rem;
+//Normal CSS
+nav{
+  transition: all $timing;
+  *{
+    transition: all $timing;
+  }
+  .hamburger{
+    height: 100vh;
+    width: $sidenav-width;
+    position: absolute;
+    top:0;
+    right:0;
+    overflow:hidden !important;
+    transition-delay:$timing;
+    z-index:-99;
+    .overlay{
+      width:$width;
+      height:$width;
+      border-radius:50%;
+      transition-delay:$timing;
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      transform-origin: 50% 50%;
+      text-align: center;
+      background: white;
+    }
+  }
+  .bars{
+    position: fixed;
+    right:  $distance + ($width - $bar-width) / 2;
+    top: $distance + ($width - $bar-width) / 2;
+    z-index:9;
+    i{
+      width: $bar-width;
+      height: $bar-width;
+      font-size:$bar-width;
+    }
+  }
+  .cover{
+    position: absolute;
+    top:0;
+    right: 0;
+    width:0;
+    height:100vh;
+    background: rgba(0,0,0,0.1);
+  }
+  .sidenav{
+    visibility: hidden;
+    position: fixed;
+    top:0;
+    right:0;
+    opacity:0;
+    height: 100vh;
+    width:$sidenav-width;
+    transition-delay: 0;
+    z-index:1;
+    padding: $padding;
+    .profile{
+      position:absolute;
+      top: $distance + ($width - $bar-width) / 2;
+      left: 3rem;
+      border: 2px solid black;
+      width: 160px;
+      height:160px;
+      img{
+        max-height: auto;
+        max-width: auto;
+      }
+    }
+    .elem{
+      box-shadow:  0 0 5px rgba(0, 0, 0, 0.5);
+      margin-top: 1rem;
+    }
+  }
+  .second-sidenav{
+    position:absolute;
+    visibility: hidden;
+    opacity: 0;
+    height: 100vh;
+    width: $sidenav-width;
+    right:-$sidenav-width;
+    top:0;
+    padding-top:$padding;
+    padding-bottom:$padding;
+    .overlay{
+      background:#AAA;
+      height: 100%;
+    }
+  }
+  &>.overlay{
+    width:$width;
+    height:$width;
+    border-radius:50%;
+    transition-delay:$timing;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    transform-origin: 50% 50%;
+    text-align: center;
+    background: white;
+  }
+}
+nav.active{
+  .hamburger{
+    transition-delay:0s;
+    transition: all 0s;
+    height:100vh;
+    width:$sidenav-width;
+    top: 0;
+    right:0;
+    z-index:1;
+    .overlay{
+      width:400vw;
+      height:400vw;
+      margin-top: -200vw;
+      margin-right: -200vw;
+      transition-delay:0s;
+    }
+  }
+  .cover{
+    width:100%;
+  }
+  .sidenav{
+    transition-delay: $timing;
+    right:0;
+    visibility: visible;
+    opacity:1;
+  }
+  .second-sidenav.active{
+    opacity:1;
+    visibility:visible;
+    right:$sidenav-width;
+    .elem{
+      padding: $padding;
+    }
+  }
+}
